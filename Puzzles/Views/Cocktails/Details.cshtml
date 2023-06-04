@@ -1,0 +1,70 @@
+﻿@model Cocktail
+
+@{
+    ViewData["Title"] = "Cocktail details";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-info">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @Model.Name
+                            </h5>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="@Model.ImageUrl" width="100%" alt="@Model.Name">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">@Model.Description</p>
+                        <p class="card-text"><b>Category: </b>@Model.DrinkCategory</p>
+                        <p class="card-text">
+                            <b>Glass: </b>
+                            <div class="row">
+                                <div class="card-columns text-center">
+                            <img class="border-info rounded-circle" src="@Model.Glass.ImageUrl" style="max-width:150px" />
+                            
+                            <a asp-controller="Glasses" asp-actoin="Details" asp-route-id="@Model.GlassId">
+                                @Model.Glass.Name
+                            </a>
+                                </div>
+                            </div>
+                        </p>
+
+
+                        <p class="card-text">
+                            <b>Ingredients: </b>
+                            <div class="row">
+                                @foreach (var ingredient in Model.Ingredients_Cocktails)
+                                {
+                                    <div class="columns text-center">
+                                        @*original was style="max-width:150px"*@
+                                        <img class="border-info rounded-circle" src="@ingredient.Ingredient.ImageUrl" style="height:150px; width:150px"  />
+                                        <br />
+                                        <a asp-controller="Ingredients" asp-action="Details" asp-route-id="@ingredient.IngredientId">@ingredient.Ingredient.Name</a>
+                                    </div>
+                                }
+                            </div>
+                        </p>
+
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <a class="btn btn-outline-primary float-right" asp-action="Index"> Back to List </a>
+                            <a class="btn btn-success text-white"><i class="bi bi-cart-plus"></i> Add to Cart (Price @Model.Price.ToString("c"))</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
