@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Puzzles.Data;
 using Puzzles.Data.Services;
+using Puzzles.Data.Static;
 using Puzzles.Models;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -9,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Puzzles.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class GlassesController : Controller
     {
         private readonly IGlassesService _service;
@@ -16,6 +19,8 @@ namespace Puzzles.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var allGlasses = await _service.GetAllAsync();
@@ -23,6 +28,7 @@ namespace Puzzles.Controllers
         }
 
         //GET : glasses/details/id (1)
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var glassDetails = await _service.GetByIdAsync(id);

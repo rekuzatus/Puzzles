@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Puzzles.Data;
 using Puzzles.Data.Services;
+using Puzzles.Data.Static;
 using Puzzles.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Puzzles.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class IngredientsController : Controller
     {
         private readonly IIngredientsService _service;
@@ -14,11 +17,14 @@ namespace Puzzles.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var data = await _service.GetAllAsync();
             return View(data);
         }
+
 
         //Get request: Ingredients/Create
         public  IActionResult Create()
@@ -38,6 +44,7 @@ namespace Puzzles.Controllers
         }
 
         //Get: Ingredients/Details/Id(1)
+        [AllowAnonymous]
         public async Task<IActionResult> Details (int id)
         {
             var ingredientDetails = await _service.GetByIdAsync(id);

@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Puzzles.Data;
 using Puzzles.Data.Services;
+using Puzzles.Data.Static;
 using Puzzles.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Puzzles.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class CocktailsController : Controller
     {
         private readonly ICocktailsService _service;
@@ -16,13 +19,30 @@ namespace Puzzles.Controllers
         {
             _service = service;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var allCocktails = await _service.GetAllAsync();
             return View(allCocktails);
         }
 
+        [AllowAnonymous]
+        public async Task<IActionResult> Filter(string searchString)
+        {
+            var allCocktails = await _service.GetAllAsync();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                var filteredResult = allCocktails.Where(n => n.Name.ToLower().Contains(searchString.ToLower()));
+                return View("Index", filteredResult);
+            }
+
+            return View("Index", allCocktails);
+        }
+
+
         //GET: Cocktails/Details/id
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var cocktailDetail = await _service.GetCocktailByIdAsync(id);
@@ -78,7 +98,7 @@ namespace Puzzles.Controllers
 
             ViewBag.Glasses = new SelectList(cocktailDropdownsData.Glasses, "Id", "Name");
             ViewBag.Ingredients = new SelectList(cocktailDropdownsData.Ingredients, "Id", "Name");
-            return View(response);
+            return View(response);  
         }
 
         [HttpPost]
