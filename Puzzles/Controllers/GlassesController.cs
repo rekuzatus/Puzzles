@@ -27,6 +27,18 @@ namespace Puzzles.Controllers
             return View(allGlasses);
         }
 
+        public async Task<IActionResult> Filter(string searchString)
+        {
+            var allIngredients = await _service.GetAllAsync();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                var filteredResult = allIngredients.Where(n => n.Name.ToLower().Contains(searchString.ToLower()));
+                return View("Index", filteredResult);
+            }
+
+            return View("Index", allIngredients);
+        }
+
         //GET : glasses/details/id (1)
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)

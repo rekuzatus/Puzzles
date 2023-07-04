@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Puzzles
 {
@@ -34,7 +35,7 @@ namespace Puzzles
             //DbContext config
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
 
-            //Services Configuration - adaugam serviciile
+            //Services Configuration - adding services
             services.AddScoped<IIngredientsService, IngredientsService>();
             services.AddScoped<IGlassesService, GlassesService>();
             services.AddScoped<ICocktailsService, CocktailsService>();
@@ -52,8 +53,10 @@ namespace Puzzles
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             });
 
-
+                
             services.AddControllersWithViews();
+        
+
         }
 
 

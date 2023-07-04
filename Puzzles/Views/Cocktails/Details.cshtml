@@ -30,9 +30,10 @@
                                 <div class="card-columns text-center">
                             <img class="border-info rounded-circle" src="@Model.Glass.ImageUrl" style="max-width:150px" />
                             
-                            <a asp-controller="Glasses" asp-actoin="Details" asp-route-id="@Model.GlassId">
+                          @*  <a asp-controller="Glasses" asp-actoin="Details" asp-route-id="@Model.GlassId">
                                 @Model.Glass.Name
-                            </a>
+                            </a> *@
+                                    @Model.Glass.Name
                                 </div>
                             </div>
                         </p>
@@ -47,7 +48,8 @@
                                         @*original was style="max-width:150px"*@
                                         <img class="border-info rounded-circle" src="@ingredient.Ingredient.ImageUrl" style="height:150px; width:150px"  />
                                         <br />
-                                        <a asp-controller="Ingredients" asp-action="Details" asp-route-id="@ingredient.IngredientId">@ingredient.Ingredient.Name</a>
+                                      @*  <a asp-controller="Ingredients" asp-action="Details" asp-route-id="@ingredient.IngredientId">@ingredient.Ingredient.Name</a> *@
+                                        @ingredient.Ingredient.Name
                                     </div>
                                 }
                             </div>
@@ -60,11 +62,14 @@
                         <p class="card-text">
                             <a class="btn btn-outline-primary float-right" asp-action="Index"> Back to List </a>
                             <a class="btn btn-success text-white" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@Model.Id"><i class="bi bi-cart-plus"></i> Add to Cart (Price @Model.Price.ToString("c"))</a>
+
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+

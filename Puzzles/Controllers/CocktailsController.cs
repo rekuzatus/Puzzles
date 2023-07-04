@@ -30,14 +30,22 @@ namespace Puzzles.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
         {
-            var allCocktails = await _service.GetAllAsync();
-            if (!string.IsNullOrEmpty(searchString))
+
+            if (string.IsNullOrEmpty(searchString))
             {
-                var filteredResult = allCocktails.Where(n => n.Name.ToLower().Contains(searchString.ToLower()));
+                var allCocktails = await _service.GetAllAsync(n => n.Ingredients_Cocktails);
+                return View("Index", allCocktails);
+            }
+            else
+            {
+                /* var filteredResult = allCocktails.Where(n => n.Name.ToLower().Contains(searchString.ToLower()) 
+                 || n.Ingredients_Cocktails.Any(x => x.Ingredient.Name.ToLower().Contains(searchString.ToLower())));
+                 return View("Index", filteredResult);*/
+
+                var filteredResult = await _service.GetCocktailBySearch(searchString);
                 return View("Index", filteredResult);
             }
 
-            return View("Index", allCocktails);
         }
 
 
@@ -116,6 +124,28 @@ namespace Puzzles.Controllers
                 return View(cocktail);
             }
             await _service.UpdateCocktailAsync(cocktail);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var cocktailDetails = await _service.GetByIdAsync(id);
+
+            if (cocktailDetails == null) return View("NotFound");
+
+            return View(cocktailDetails);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+
+            var cocktailDetails = await _service.GetByIdAsync(id);
+
+            if (cocktailDetails == null) return View("NotFound");
+
+            await _service.DeleteAsync(id);
 
             return RedirectToAction(nameof(Index));
         }

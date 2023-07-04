@@ -90,7 +90,7 @@ namespace Puzzles.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Cocktails");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult AccessDenied(string ReturnUrl)

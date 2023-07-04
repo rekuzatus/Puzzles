@@ -2,6 +2,7 @@
 using Puzzles.Data.Base;
 using Puzzles.Data.ViewModels;
 using Puzzles.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,6 +51,16 @@ namespace Puzzles.Data.Services
                 .Include(g => g.Glass)
                 .Include(ic => ic.Ingredients_Cocktails).ThenInclude(i => i.Ingredient)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            return cocktailDetails;
+        }
+
+        public async Task<List<Cocktail>> GetCocktailBySearch(string searchTerm)
+        {
+            var cocktailDetails = await _context.Cocktails
+               .Include(ic => ic.Ingredients_Cocktails).ThenInclude(i => i.Ingredient)
+               .Where(x => x.Name.ToLower().Contains(searchTerm.ToLower())
+               || x.Ingredients_Cocktails.Any(n => n.Ingredient.Name.ToLower().Contains(searchTerm.ToLower()))).ToListAsync();
 
             return cocktailDetails;
         }
